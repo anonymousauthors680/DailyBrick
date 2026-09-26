@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f6f5f1">
+  <meta name="description" content="DailyBrick: Language-Guided Synthesis of Brick Assembly Instructions. Project video and abstract.">
+  <title>DailyBrick — Language-Guided Synthesis of Brick Assembly Instructions</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="site-header">
+    <a class="wordmark" href="#top" aria-label="DailyBrick, back to top"><span class="mark" aria-hidden="true">▦</span> DailyBrick</a>
+    <nav aria-label="Main navigation">
+      <a href="#video">Video</a>
+      <a href="#abstract">Abstract</a>
+    </nav>
+  </header>
+
+  <main id="top">
+    <section class="hero" id="video" aria-label="DailyBrick project video">
+      <div class="hero-sticky">
+        <div class="video-frame">
+          <video id="demo-video" autoplay muted loop playsinline preload="metadata" poster="assets/video-poster.jpg" aria-label="DailyBrick demonstration video">
+            <source src="assets/dailybrick-demo-mobile.mp4" type="video/mp4" media="(max-width: 800px)">
+            <source src="assets/dailybrick-demo.mp4" type="video/mp4">
+            Your browser does not support HTML video. <a href="assets/dailybrick-demo.mp4">Download the demo video</a>.
+          </video>
+          <button class="play-prompt" id="play-prompt" type="button" hidden aria-label="Play DailyBrick video"><span aria-hidden="true">▶</span> Tap to play video</button>
+        </div>
+        <div class="hero-caption">
+          <span class="eyebrow">A research project</span>
+          <div class="hero-reveal">
+            <h1>From an idea<br>to a buildable model.</h1>
+            <span class="scroll-cue">Scroll to explore <span aria-hidden="true">↓</span></span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="paper-section" id="abstract" aria-labelledby="paper-title">
+      <div class="section-label"><span class="label-line"></span> The paper</div>
+      <div class="paper-grid">
+        <div class="paper-heading">
+          <p class="eyebrow dark">Language-guided brick assembly</p>
+          <h2 id="paper-title">DailyBrick: Language-Guided Synthesis of Brick Assembly Instructions</h2>
+          <p class="byline">Anonymous Authors</p>
+          <figure class="teaser">
+            <img src="assets/dailybrick-poster.jpg" alt="DailyBrick demonstration showing brick assembly and iterative refinement" loading="lazy">
+          </figure>
+        </div>
+        <div class="abstract-copy">
+          <h3>Abstract</h3>
+          <p>Generating a LEGO model from a user request is more than generating a plausible 3D shape. LEGO models require physical support for each brick, and each brick must be placed without obstruction. Current methods address this issue by training an expert large language model. We ease the problem of generating extremely long context for all brick connections by writing a program that builds LEGO models like a human, considering whether each intermediate step can be executed.</p>
+          <p>We introduce DailyBrick, a multi-stage agentic system that produces a LEGO model together with brick-by-brick assembly instructions for human building and robot assembly. We design a multi-stage harness with roles to help LLMs generate more effectively. A versioned construction SDK compiles multi-level decisions, from semantic subparts to individual bricks, into canonical operations.</p>
+          <p>An external Meta-Reviewer agent replays and inspects the generated package, verifies the model and its construction process, identifies failures, traces them to the responsible stage, and routes them to bounded repairs or to auditable candidates for later skill or tool updates. Extensive experiments demonstrate that DailyBrick generates LEGO models from simple user requests better than recent agentic systems, and show its utility in downstream applications such as robot manipulation for model assembly from instructions and brick sets.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="video-note" aria-label="Watch the demonstration">
+      <div>
+        <p class="eyebrow dark">The demonstration</p>
+        <h2>See the full process in motion.</h2>
+      </div>
+      <a href="#video" class="text-link">Watch video <span aria-hidden="true">↗</span></a>
+    </section>
+  </main>
+
+  <footer>
+    <span>DailyBrick · Research project page</span>
+    <span>For a fair review, please evaluate the paper and demonstration on their merits.</span>
+  </footer>
+  <script src="script.js" defer></script>
+</body>
+</html>
