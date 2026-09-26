@@ -10,8 +10,8 @@ if (!window.location.hash) {
   window.scrollTo({ top:0, left:0, behavior:'instant' });
 }
 
-video.muted = true;
-video.defaultMuted = true;
+video.muted = false;
+video.defaultMuted = false;
 function setVolume(value) {
   // Some mobile browsers leave volume control to the device buttons.
   try { video.volume = value; } catch (_) { /* Keep playback available. */ }
@@ -80,6 +80,7 @@ soundToggle.addEventListener('click', () => {
     setVolume(0.18);
   }
   video.muted = !video.muted;
+  if (!video.muted) document.body.classList.add('sound-interacted');
   updateSoundButton();
   if (!video.muted) video.play().catch(showPlayPrompt);
 });
@@ -95,7 +96,10 @@ function showPlayPrompt() {
   playPrompt.hidden = false;
 }
 
-video.addEventListener('playing', () => { playPrompt.hidden = true; });
+video.addEventListener('playing', () => {
+  playPrompt.hidden = true;
+  updateSoundButton();
+});
 video.addEventListener('error', showPlayPrompt);
 // A stalled download is buffering, not evidence that autoplay was blocked.
 playPrompt.addEventListener('click', () => {
@@ -106,9 +110,20 @@ playPrompt.addEventListener('click', () => {
   video.play().catch(showPlayPrompt);
 });
 
-video.addEventListener('canplay', () => {
-  if (video.paused && video.muted) video.play().catch(showPlayPrompt);
-});
+async function startPlayback() {
+  if (window.scrollY > 0) video.muted = true;
+  try {
+    await video.play();
+    document.body.classList.add('sound-interacted');
+    updateSoundButton();
+  } catch (_) {
+    // Keep the video moving if the browser disallows autoplay with audio.
+    video.muted = true;
+    document.body.classList.add('sound-interacted');
+    updateSoundButton();
+    soundToggle.textContent = 'Click to enable sound';
+    try { await video.play(); } catch (_) { showPlayPrompt(); }
+  }
+}
 
-// Mobile data-saving and battery settings can block autoplay, even when muted.
-video.play().catch(showPlayPrompt);
+startPlayback();
