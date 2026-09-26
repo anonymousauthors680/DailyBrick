@@ -20,7 +20,7 @@ setVolume(Number(volumeControl.value) / 100);
 
 function updateSoundButton() {
   const on = !video.muted && video.volume > 0;
-  soundToggle.textContent = on ? 'Sound on' : 'Sound off';
+  soundToggle.textContent = on ? 'Sound on' : 'Tap for sound';
   soundToggle.setAttribute('aria-label', on ? 'Turn sound off' : 'Turn sound on');
   soundToggle.setAttribute('aria-pressed', String(on));
 }
@@ -36,7 +36,6 @@ function muteOnScroll() {
 
 function enableSound() {
   if (window.scrollY > 0) return;
-  document.body.classList.add('sound-interacted');
   setVolume(Number(volumeControl.value) / 100 || 0.18);
   video.muted = false;
   updateSoundButton();
@@ -80,7 +79,6 @@ soundToggle.addEventListener('click', () => {
     setVolume(0.18);
   }
   video.muted = !video.muted;
-  if (!video.muted) document.body.classList.add('sound-interacted');
   updateSoundButton();
   if (!video.muted) video.play().catch(showPlayPrompt);
 });
@@ -114,14 +112,11 @@ async function startPlayback() {
   if (window.scrollY > 0) video.muted = true;
   try {
     await video.play();
-    document.body.classList.add('sound-interacted');
     updateSoundButton();
   } catch (_) {
     // Keep the video moving if the browser disallows autoplay with audio.
     video.muted = true;
-    document.body.classList.add('sound-interacted');
     updateSoundButton();
-    soundToggle.textContent = 'Click to enable sound';
     try { await video.play(); } catch (_) { showPlayPrompt(); }
   }
 }
