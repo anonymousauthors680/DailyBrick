@@ -49,8 +49,6 @@ body.scrolled-away .sound-controls { visibility:hidden; pointer-events:none; }
 .video-note h2 { margin:14px 0 0; font-family:Manrope,Arial,sans-serif; font-size:clamp(30px,3.4vw,54px); letter-spacing:-.06em; line-height:1.15; }
 .text-link { flex:none; font-size:14px; font-weight:700; text-decoration:none; border-bottom:1px solid currentColor; padding-bottom:6px; }
 .text-link span { padding-left:17px; }
-.closing-video { padding:0 clamp(25px,8.6vw,160px) 100px; display:flex; justify-content:center; }
-.closing-video video { width:min(100%,720px); height:auto; aspect-ratio:1; object-fit:contain; border-radius:16px; background:#eee; }
 footer { background:#eaeae4; padding:27px clamp(25px,8.6vw,160px); display:flex; justify-content:space-between; gap:25px; }
 .footer-brand { color:#666d63; font-size:12px; }
 .footer-review-note { color:#eaeae4; font-size:12px; }
