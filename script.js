@@ -4,6 +4,7 @@ const playPrompt = document.querySelector('#play-prompt');
 const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
 
 function updateHero() {
+  document.body.classList.toggle('has-scrolled', window.scrollY > 0);
   if (reduceMotion.matches) {
     document.documentElement.style.setProperty('--reveal', '1');
     document.documentElement.style.setProperty('--shrink', '0');
@@ -11,7 +12,7 @@ function updateHero() {
   }
   const distance = Math.max(1, hero.offsetHeight - window.innerHeight);
   const progress = Math.min(1, Math.max(0, -hero.getBoundingClientRect().top / distance));
-  // First reveal the heading while the video stays full-screen; then shrink it.
+  // Reveal the text first. Then slide the full-size video out of view.
   const reveal = Math.min(1, progress / 0.22);
   const shrink = Math.min(1, Math.max(0, (progress - 0.36) / 0.64));
   document.documentElement.style.setProperty('--reveal', reveal.toFixed(3));
