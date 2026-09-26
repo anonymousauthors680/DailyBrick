@@ -4,19 +4,21 @@ const playPrompt = document.querySelector('#play-prompt');
 const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
 
 function updateHero() {
-  document.body.classList.toggle('has-scrolled', window.scrollY > 0);
   if (reduceMotion.matches) {
     document.documentElement.style.setProperty('--reveal', '1');
-    document.documentElement.style.setProperty('--shrink', '0');
+    document.documentElement.style.setProperty('--rise', '1');
+    document.documentElement.style.setProperty('--slide', '0');
     return;
   }
   const distance = Math.max(1, hero.offsetHeight - window.innerHeight);
   const progress = Math.min(1, Math.max(0, -hero.getBoundingClientRect().top / distance));
-  // Reveal the text first. Then slide the full-size video out of view.
-  const reveal = Math.min(1, progress / 0.22);
-  const shrink = Math.min(1, Math.max(0, (progress - 0.36) / 0.64));
+  // Raise the project title, reveal the following text, then slide the full-size video away.
+  const rise = Math.min(1, progress / 0.38);
+  const reveal = Math.min(1, Math.max(0, (progress - 0.12) / 0.22));
+  const slide = Math.min(1, Math.max(0, (progress - 0.55) / 0.45));
   document.documentElement.style.setProperty('--reveal', reveal.toFixed(3));
-  document.documentElement.style.setProperty('--shrink', shrink.toFixed(3));
+  document.documentElement.style.setProperty('--rise', rise.toFixed(3));
+  document.documentElement.style.setProperty('--slide', slide.toFixed(3));
 }
 
 let frame = 0;
