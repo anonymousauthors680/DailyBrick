@@ -5,7 +5,13 @@ const soundToggle = document.querySelector('#sound-toggle');
 const volumeControl = document.querySelector('#volume-control');
 const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
 
-video.volume = Number(volumeControl.value) / 100;
+video.muted = true;
+video.defaultMuted = true;
+function setVolume(value) {
+  // Some mobile browsers leave volume control to the device buttons.
+  try { video.volume = value; } catch (_) { /* Keep playback available. */ }
+}
+setVolume(Number(volumeControl.value) / 100);
 
 function updateSoundButton() {
   const on = !video.muted && video.volume > 0;
@@ -24,6 +30,7 @@ function muteOnScroll() {
 }
 
 function updateHero() {
+  document.body.classList.toggle('has-scrolled', window.scrollY > 0);
   muteOnScroll();
   if (reduceMotion.matches) {
     document.documentElement.style.setProperty('--reveal', '1');
@@ -54,16 +61,18 @@ soundToggle.addEventListener('click', () => {
   if (window.scrollY > 0) return;
   if (video.volume === 0) {
     volumeControl.value = '18';
-    video.volume = 0.18;
+    setVolume(0.18);
   }
   video.muted = !video.muted;
   updateSoundButton();
+  if (!video.muted) video.play().catch(showPlayPrompt);
 });
 
 volumeControl.addEventListener('input', () => {
-  video.volume = Number(volumeControl.value) / 100;
+  setVolume(Number(volumeControl.value) / 100);
   if (window.scrollY === 0) video.muted = video.volume === 0;
   updateSoundButton();
+  if (!video.muted) video.play().catch(showPlayPrompt);
 });
 
 function showPlayPrompt() {
@@ -72,9 +81,19 @@ function showPlayPrompt() {
 
 video.addEventListener('playing', () => { playPrompt.hidden = true; });
 video.addEventListener('error', showPlayPrompt);
-video.addEventListener('stalled', showPlayPrompt);
+// A stalled download is buffering, not evidence that autoplay was blocked.
 playPrompt.addEventListener('click', () => {
+  if (video.error) video.load();
+  if (window.scrollY === 0) {
+    setVolume(Number(volumeControl.value) / 100 || 0.18);
+    video.muted = false;
+    updateSoundButton();
+  }
   video.play().catch(showPlayPrompt);
+});
+
+video.addEventListener('canplay', () => {
+  if (video.paused && video.muted) video.play().catch(showPlayPrompt);
 });
 
 // Mobile data-saving and battery settings can block autoplay, even when muted.
