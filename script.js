@@ -5,6 +5,11 @@ const soundToggle = document.querySelector('#sound-toggle');
 const volumeControl = document.querySelector('#volume-control');
 const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
 
+if (!window.location.hash) {
+  history.scrollRestoration = 'manual';
+  window.scrollTo({ top:0, left:0, behavior:'instant' });
+}
+
 video.muted = true;
 video.defaultMuted = true;
 function setVolume(value) {
@@ -28,6 +33,17 @@ function muteOnScroll() {
     updateSoundButton();
   }
 }
+
+function enableSound() {
+  if (window.scrollY > 0) return;
+  document.body.classList.add('sound-interacted');
+  setVolume(Number(volumeControl.value) / 100 || 0.18);
+  video.muted = false;
+  updateSoundButton();
+  video.play().catch(showPlayPrompt);
+}
+
+video.addEventListener('click', enableSound);
 
 function updateHero() {
   document.body.classList.toggle('has-scrolled', window.scrollY > 0);
@@ -85,9 +101,7 @@ video.addEventListener('error', showPlayPrompt);
 playPrompt.addEventListener('click', () => {
   if (video.error) video.load();
   if (window.scrollY === 0) {
-    setVolume(Number(volumeControl.value) / 100 || 0.18);
-    video.muted = false;
-    updateSoundButton();
+    enableSound();
   }
   video.play().catch(showPlayPrompt);
 });
