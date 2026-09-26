@@ -1,9 +1,30 @@
 const hero = document.querySelector('.hero');
 const video = document.querySelector('#demo-video');
 const playPrompt = document.querySelector('#play-prompt');
+const soundToggle = document.querySelector('#sound-toggle');
+const volumeControl = document.querySelector('#volume-control');
 const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
 
+video.volume = Number(volumeControl.value) / 100;
+
+function updateSoundButton() {
+  const on = !video.muted && video.volume > 0;
+  soundToggle.textContent = on ? 'Sound on' : 'Sound off';
+  soundToggle.setAttribute('aria-label', on ? 'Turn sound off' : 'Turn sound on');
+  soundToggle.setAttribute('aria-pressed', String(on));
+}
+
+function muteOnScroll() {
+  const scrolled = window.scrollY > 0;
+  document.body.classList.toggle('scrolled-away', scrolled);
+  if (scrolled && !video.muted) {
+    video.muted = true;
+    updateSoundButton();
+  }
+}
+
 function updateHero() {
+  muteOnScroll();
   if (reduceMotion.matches) {
     document.documentElement.style.setProperty('--reveal', '1');
     document.documentElement.style.setProperty('--rise', '1');
@@ -28,6 +49,22 @@ window.addEventListener('scroll', () => {
 window.addEventListener('resize', updateHero);
 reduceMotion.addEventListener('change', updateHero);
 updateHero();
+
+soundToggle.addEventListener('click', () => {
+  if (window.scrollY > 0) return;
+  if (video.volume === 0) {
+    volumeControl.value = '18';
+    video.volume = 0.18;
+  }
+  video.muted = !video.muted;
+  updateSoundButton();
+});
+
+volumeControl.addEventListener('input', () => {
+  video.volume = Number(volumeControl.value) / 100;
+  if (window.scrollY === 0) video.muted = video.volume === 0;
+  updateSoundButton();
+});
 
 function showPlayPrompt() {
   playPrompt.hidden = false;
